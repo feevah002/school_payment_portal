@@ -1,10 +1,4 @@
-/**
- * @author Ikenna Emmanuel <eikenna58@gmail.com>
- * @description ''
- * @route `/`
- * @access ''
- * @type ''
- */
+
 const {
   new_dept,
   get_all_dept,
@@ -12,118 +6,136 @@ const {
   update_dept_info,
   delete_dept,
 } = require('./repository');
+// importing department validate class(which is an opject)
+const { dept_validate } = require('../../middleware/validate')
+// getting methods from the imported classes
+const { validate_onPost, validate_onGet }= dept_validate
 
 
+/**
+ * @author Ikenna Emmanuel <eikenna58@gmail.com>
+ * @description post create a new department
+ * @route /v1/dept
+ * @access Public
+ * @type POST
+ */
 exports.collect_dept_info  = async (req,res)=>{
 try{
-  
-  // put for validation before letting it in
-  const unvalidated_info = req.body
-  // const validated_info = await validate(unvalidated_info)
-
-  const created_data = await new_dept(unvalidated_info)
+  // valudate input
+  const validated_info = await validate_onPost(req.body)
+  const created_data = await new_dept(validated_info)
 
   return  res.status(200).json({
-          status:true,
-          data:created_data,
-        });
+            status:true,
+            data:created_data,
+          });
   }catch(error){
 
   return  res.status(500).json({
+            error:`Something went wrong: ${error}`,
+            status:false,
+          });
+    }
+}
+
+
+/**
+ * @author Ikenna Emmanuel <eikenna58@gmail.com>
+ * @description get a specific department
+ * @route /v1/dept/:dept
+ * @access Public
+ * @type GET
+ */ 
+exports.search_a_dept = async(req, res)=>{
+  try{
+  
+  const validated_info = await validate_onGet(req.params.dept)
+  const dept = await get_a_dept({dept_name: validated_info})
+
+  return  res.status(200).json({
+            status:true,
+            data:dept,
+          });
+  
+  }catch(error){
+    return  res.status(500).json({
+              error:`Something went wrong: ${error}`,
+              status:false,
+            });
+    }
+  }
+  
+
+/**
+ * @author Ikenna Emmanuel <eikenna58@gmail.com>
+ * @description get all departments
+ * @route //v1/dept
+ * @access Public
+ * @type GET
+ */
+exports.search_all_dept = async(req, res)=>{
+try{
+const dept = await get_all_dept()
+
+return  res.status(200).json({
+          status:true,
+          data:dept,
+        });
+
+}catch(error){
+return  res.status(500).json({
           error:`Something went wrong: ${error}`,
           status:false,
         });
-  }
-}
-
-// get all due 
-exports.search_all_dues = async(req, res)=>{
-try{
-const dues = await get_all_dues()
-
-return  res.status(200).json({
-        status:true,
-        data:dues,
-      });
-
-}catch(error){
-return  res.status(500).json({
-        error:`Something went wrong: ${error}`,
-        status:false,
-      });
 } 
 }
 
-// info on a specific due  
-exports.search_a_due = async(req, res)=>{
-try{
-const due = get_due({title: req.params.due.toLowerCase()})
 
-return  res.status(200).json({
-        status:true,
-        data:due,
-      });
+/**
+ * @author Ikenna Emmanuel <eikenna58@gmail.com>
+ * @description update a department info
+ * @route /v1/dept/:dept
+ * @access Public
+ * @type PUT
+ */
 
-}catch(error){
-return  res.status(500).json({
-        error:`Something went wrong: ${error}`,
-        status:false,
-      });
-}
-}
-
-// info on the dues for a department  
-exports.search_dues_for_a_dept = async(req, res)=>{
-try{
-let due = get_due_for_dept(req.params.dept.toLowerCase())
-due = due.split(' ').join('-')
-return  res.status(200).json({
-        status:true,
-        data:due,
-      });
-
-}catch(error){
-return  res.status(500).json({
-        error:`Something went wrong: ${error}`,
-        status:false,
-      });
-}
-}
-
-
-// update info about a due
-exports.update_info = async(req, res)=>{
+exports.update_dept_info = async(req, res)=>{
 try{
 const upd_data = req.body
-const due = await update_due_info(req.params.due.toLowerCase(), upd_data)
+const dept = await update_dept_info(req.params.dept.toLowerCase(), upd_data)
 
 return  res.status(200).json({
-        status:true,
-        data:due,
-      });
+          status:true,
+          data:dept,
+        });
 
 }catch(error){
 return  res.status(500).json({
-        error:`Something went wrong: ${error}`,
-        status:false,
-      });
+            error:`Something went wrong: ${error}`,
+            status:false,
+          });
 }
 }
-// delte a due
-exports.delete_info = async(req, res)=>{
+/**
+ * @author Ikenna Emmanuel <eikenna58@gmail.com>
+ * @description delete a department
+ * @route /v1/dept/:dept
+ * @access Public
+ * @type DELETE
+ */
+exports.delete_dept = async(req, res)=>{
 try{
-const upd_data = req.body
-const due = await delete_due(req.params.due.toLowerCase())
+  const dept = await delete_dept(req.params.dept.toLowerCase())
 
-return  res.status(200).json({
-        status:true,
-        data:due,
-      });
+  return  res.status(200).json({
+            status:true,
+            data:dept,
+          });
 
-}catch(error){
-return  res.status(500).json({
-        error:`Something went wrong: ${error}`,
-        status:false,
-      });
-}
+  }catch(error){
+  return  res.status(500).json({
+            error:`Something went wrong: ${error}`,
+            status:false,
+          });
+  }
 }

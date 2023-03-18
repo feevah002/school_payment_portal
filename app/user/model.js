@@ -5,38 +5,24 @@ const UserSchema = new mongoose.Schema(
   {
     username:{
       type:String,
-      required:true
+      required:true,
+      trim:true
+    },
+    email:{
+      type:String,
+      required:true,
+      trim:true
     },
     password:{
       type:String,
-      required:true
     },
     department:{
       type:mongoose.Schema.Types.ObjectId,
-      required:true
+      required:true,
+      ref:"Dept"
     },
-    tuition:{
-      tuitionId: {
-        type:mongoose.Schema.Types.ObjectId,
-        required:true
-      },
-      paid:{
-        type: Boolean,
-        required:true, 
-        default: false
-      }
-    },
-    studentDues:[{
-      duesId: {
-        type:mongoose.Schema.Types.ObjectId,
-        required:true, 
-      },
-      paid:{
-        type: Boolean, 
-        default: false,
-        required:true, 
-      }
-    }],
+    tuition_paid:[],
+    student_dues:[],
     
   },{
       timestamps:true

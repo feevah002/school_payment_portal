@@ -21,7 +21,8 @@ const connectDB = async () => {
         useUnifiedTopology: true,
         keepAlive: true,
         socketTimeoutMS: 3000,
-        connectTimeoutMS: 3000
+        connectTimeoutMS: 3000,
+        
       });
     }, 3000);
   });
@@ -37,6 +38,7 @@ const connectDB = async () => {
     .connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true
+      
     })
     .catch((error) => console.log(error));
 };

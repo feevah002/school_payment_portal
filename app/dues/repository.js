@@ -1,14 +1,13 @@
 const Dues = require('./model')
-
+const populateQuery = ['department_to_pay.dept_id']
 // create a due
 exports.new_due = async (new_info)=>{
   const dues = await Dues.create(new_info)
   return dues
 }
-
 // get a particular due 
 exports.get_due= async (query)=>{
-  const found = await Dues.findOne(query)
+  const found = await Dues.findOne(query).populate(populateQuery)
   return found
 }
 
@@ -20,7 +19,7 @@ exports.get_due_for_dept = async (department_to_pay)=>{
 
 // all existing dues
 exports.get_all_dues = async ()=>{
-  const dues = await Dues.find({})
+  const dues = await Dues.find({}).populate(populateQuery)
   return dues
 }
 

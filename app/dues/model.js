@@ -19,14 +19,12 @@ const DuesSchema = new mongoose.Schema(
       type:Number,
       required:true
     },
-    department_to_pay:[
-      {
-        deptId:{
-          type:mongoose.Schema.Types.ObjectId,
-          unique:true,
-        }
-      }
-    ],
+    department_to_pay:[{
+        dept_id:{type:mongoose.Schema.Types.ObjectId,
+                 unique:true,
+                 ref:'Dept'
+                }
+    }],
   },{
     timestamps:true
   }
