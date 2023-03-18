@@ -7,7 +7,7 @@ const {
 
 
 // initialze payment
-router.get('/dues-pay/initialize', create_payment_link)
+router.post('/dues-pay/initialize', create_payment_link)
 
 // create recipt
 router.post('/dues/webhook', collect_webhook_data)
